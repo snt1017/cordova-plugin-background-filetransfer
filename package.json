@@ -1,0 +1,20 @@
+{
+  "name": "cordova-plugin-background-filetransfer",
+  "version": "0.0.1",
+  "cordova": {
+    "id": "cordova-plugin-background-filetransfer",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [],
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Santiago Cardenas",
+  "license": "Apache 2.0",
+  "dependencies": {},
+  "description": ""
+}
