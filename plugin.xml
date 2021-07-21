@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <name>BackgroundFileTransfer</name>
     <js-module name="BackgroundFileTransfer" src="www/BackgroundFileTransfer.js">
-        <clobbers target="cordova.plugins.BackgroundFileTransfer" />
+        <clobbers target="cordova.plugin.BackgroundFileTransfer" />
     </js-module>
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">

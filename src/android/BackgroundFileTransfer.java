@@ -13,6 +13,7 @@ import android.util.Log;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -25,14 +26,14 @@ import static android.net.ConnectivityManager.RESTRICT_BACKGROUND_STATUS_WHITELI
  */
 public class BackgroundFileTransfer extends CordovaPlugin {
 
-    public static final String TAG = "BackgroundFileTransfer";
+  public static final String TAG = "BackgroundFileTransfer";
 
-    @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        Context context = cordova.getActivity().getApplicationContext();
-        String packageName = context.getPackageName();
-        Log.d(TAG, "Action: " + action + ", Package name: " + packageName);
-        return false;
-    }
+  @Override
+  public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+    Context context = cordova.getActivity().getApplicationContext();
+    String packageName = context.getPackageName();
+    Log.d(TAG, "Action: " + action + ", Package name: " + packageName);
+    return false;
+  }
 
 }
