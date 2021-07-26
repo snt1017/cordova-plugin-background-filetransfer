@@ -7,11 +7,21 @@
       "android"
     ]
   },
-  "keywords": [],
-  "homepage": "",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "download manager",
+    "android",
+    "files",
+    "downaload native",
+    "Android DownloadManager",
+    "Background download",
+    "Android native download"
+  ],
+  "homepage": "https://github.com/snt1017/cordova-plugin-background-filetransfer/",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/snt1017/cordova-plugin-background-filetransfer.git"
   },
   "author": "Santiago Cardenas",
   "license": "Apache 2.0",

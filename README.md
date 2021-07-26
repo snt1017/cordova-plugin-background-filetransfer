@@ -124,3 +124,13 @@ cordova.plugins.BackgroundFileTransfer.getFileInfoById(fileId).then((result)=> {
   console.error(err);
 });
 ```
+## Notes
+Be sure that your AndroidManifest.xml contains this permission 
+``` xml
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+```
+
+## Help liks:
+
+[Android Downloader manager](https://developer.android.com/reference/android/app/DownloadManager)
