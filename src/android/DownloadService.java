@@ -5,7 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
@@ -13,17 +16,24 @@ import org.apache.cordova.CallbackContext;
 import android.app.DownloadManager;
 import android.app.DownloadManager.Request;
 
+import org.apache.cordova.camera.FileProvider;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+
+import co.inkremental.taskgo.staging.BuildConfig;
 
 
 public class DownloadService {
 
 
   private static final String TAG = "DownloadService";
-  private static final String DEFAULT_SERVICE_TITLE = "DownloadService";
+  public static final String DEFAULT_SERVICE_TITLE = "DownloadService";
 
 
   public static JSONObject getDownloadPreferences(Context context) throws JSONException {
@@ -68,11 +78,11 @@ public class DownloadService {
 
 
   // This method checks if can fire the one of a list of intents and fire it
-  public static void addUrlToDownload(Activity activity, CallbackContext callbackContext, String url, JSONObject headers, String description,
-                                      String destinationUri) throws JSONException {
-    Log.d(TAG, "addUrlToDownload: " + url);
+  public static void addUrlToDownload(Context context, CallbackContext callbackContext, String url, JSONObject headers, String description,
+                                      String relativePath, String filename) throws JSONException {
+    Log.d(TAG, "addUrlToDownload: " + url + " - " + description + " - " + relativePath + " - " + filename);
     JSONObject result = new JSONObject();
-    Uri downloadUri = new Uri.parse(url);
+    Uri downloadUri = Uri.parse(url);
     Request request = new Request(downloadUri);
 
     // Add headers
@@ -87,20 +97,83 @@ public class DownloadService {
         }
       }
     }
+
     // Add description
-    if(description!=null)request.setDescription(description);
-    // TODO Validate this
-    // Add destination uri
-    if(destinationUri!=null)request.setDestinationUri(Uri.parse(destinationUri));
-    // TODO Add preferences
+    if (description != null) request.setDescription(description);
+    else request.setDescription(filename);
+
+    if (relativePath == null) relativePath = "";
+    request.setDestinationInExternalFilesDir(context, relativePath, filename);
+
+    SharedPreferences settings = context.getSharedPreferences("BG-FileTransfer", Context.MODE_PRIVATE);
+    boolean allowNetworkMobile = settings.getBoolean("allowNetworkMobile", true);
+    boolean allowNetworkWifi = settings.getBoolean("allowNetworkWifi", true);
+    boolean allowedOverMetered = settings.getBoolean("allowedOverMetered", true);
+    boolean allowedOverRoaming = settings.getBoolean("allowedOverRoaming", true);
+    String defaultTitle = settings.getString("defaultTitle", DEFAULT_SERVICE_TITLE);
+
+    if (!allowNetworkMobile) request.setAllowedNetworkTypes(Request.NETWORK_MOBILE);
+    if (!allowNetworkWifi) request.setAllowedNetworkTypes(Request.NETWORK_WIFI);
+    request.setAllowedOverMetered(allowedOverMetered);
+    request.setAllowedOverRoaming(allowedOverRoaming);
+    request.setTitle(defaultTitle);
     // Get download manager
-    DownloadManager dm = (DownloadManager)activity.getSystemService(activity.DOWNLOAD_SERVICE);
-    long resultId = dm.enqueue(request);
-    // Save id into result JSON
-    result.put("id", resultId);
-    // Return result to cordova app
-    callbackContext.success(result);
+    DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+    try {
+      long resultId = dm.enqueue(request);
+      // Save id into result JSON
+      result.put("id", resultId);
+      // Return result to cordova app
+      callbackContext.success(result);
+    } catch (Exception e) {
+      Log.d(TAG, "startDownload = " + e.getMessage());
+      e.printStackTrace();
+      callbackContext.success(e.getMessage());
+    }
   }
 
+  public static JSONArray makeDownloadQuery(Context context, DownloadManager.Query query) throws JSONException {
+    DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+
+    Cursor c = downloadManager.query(query);
+    int columns = c.getColumnCount();
+    JSONArray list = new JSONArray();
+    while (c.moveToNext()) {
+      JSONObject obj = new JSONObject();
+      for (int i = 1; i <= columns; ++i) {
+        switch (c.getType(i)) {
+          case Cursor.FIELD_TYPE_FLOAT:
+            obj.put(c.getColumnName(i), c.getFloat(i));
+            break;
+          case Cursor.FIELD_TYPE_INTEGER:
+            obj.put(c.getColumnName(i), c.getInt(i));
+            break;
+          case Cursor.FIELD_TYPE_STRING:
+            obj.put(c.getColumnName(i), c.getString(i));
+            break;
+        }
+      }
+      list.put(obj);
+    }
+    return list;
+  }
+
+
+  public static boolean getFilesByStatus(Context context, CallbackContext callbackContext, int status) throws JSONException {
+    DownloadManager.Query query = new DownloadManager.Query();
+    query.setFilterByStatus(status);
+    JSONArray list = makeDownloadQuery(context, query);
+    callbackContext.success(list);
+    return false;
+  }
+
+
+  public static boolean getFileInfoById(Context context, CallbackContext callbackContext, long id) throws JSONException {
+    DownloadManager.Query query = new DownloadManager.Query();
+    query.setFilterById(id);
+    JSONArray list = makeDownloadQuery(context, query);
+    callbackContext.success(list);
+    return false;
+  }
 
 }

@@ -4,12 +4,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <name>BackgroundFileTransfer</name>
     <js-module name="BackgroundFileTransfer" src="www/BackgroundFileTransfer.js">
-        <clobbers target="cordova.plugin.BackgroundFileTransfer" />
+        <clobbers target="cordova.plugins.BackgroundFileTransfer" />
     </js-module>
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="BackgroundFileTransfer">
-                <param name="android-package" value="cordova.plugin.BackgroundFileTransfer" />
+                <param name="android-package" value="cordova.plugin.BackgroundFileTransfer.BackgroundFileTransfer" />
             </feature>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/*">
