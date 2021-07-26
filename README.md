@@ -13,11 +13,11 @@ cordova plugin add cordova-plugin-background-filetransfer
 * [Download service](#downloadService)
     * [.setDownloadPreferences(options)](#downloadService.setDownloadPreferences) : <code>Promise</code>
     * [.getDownloadPreferences()](#downloadService.getDownloadPreferences) : <code>Promise</code>
-    * [.DownloadPreferences](#downloadService.DownloadPreferences) : <code>Object</code>
-    * [.addUrlToDownload](#downloadService.addUrlToDownload) : <code>Promise</code>
-    * [.DownloadOptions](#downloadService.DownloadOptions) : <code>Object</code>
-    * [.getFilesByStatus](#downloadService.getFilesByStatus) : <code>Promise</code>
-    * [.getFileInfoById](#downloadService.getFileInfoById) : <code>Promise</code>
+    * [DownloadPreferences](#downloadService.DownloadPreferences) : <code>Object</code>
+    * [.addUrlToDownload(options)](#downloadService.addUrlToDownload) : <code>Promise</code>
+    * [DownloadOptions](#downloadService.DownloadOptions) : <code>Object</code>
+    * [.getFilesByStatus()](#downloadService.getFilesByStatus) : <code>Promise</code>
+    * [.getFileInfoById()](#downloadService.getFileInfoById) : <code>Promise</code>
 
 
 
