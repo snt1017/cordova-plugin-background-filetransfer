@@ -140,17 +140,25 @@ public class DownloadService {
     JSONArray list = new JSONArray();
     while (c.moveToNext()) {
       JSONObject obj = new JSONObject();
-      for (int i = 1; i <= columns; ++i) {
-        switch (c.getType(i)) {
-          case Cursor.FIELD_TYPE_FLOAT:
-            obj.put(c.getColumnName(i), c.getFloat(i));
-            break;
-          case Cursor.FIELD_TYPE_INTEGER:
-            obj.put(c.getColumnName(i), c.getInt(i));
-            break;
-          case Cursor.FIELD_TYPE_STRING:
-            obj.put(c.getColumnName(i), c.getString(i));
-            break;
+      for (int i = 1; i < columns; ++i) {
+        try {
+          // This is deprecated attribute
+          if(c.getColumnName(i).equals(DownloadManager.COLUMN_LOCAL_FILENAME)){
+            continue;
+          }
+          switch (c.getType(i)) {
+            case Cursor.FIELD_TYPE_FLOAT:
+              obj.put(c.getColumnName(i), c.getFloat(i));
+              break;
+            case Cursor.FIELD_TYPE_INTEGER:
+              obj.put(c.getColumnName(i), c.getInt(i));
+              break;
+            case Cursor.FIELD_TYPE_STRING:
+              obj.put(c.getColumnName(i), c.getString(i));
+              break;
+          }
+        } catch (Exception e) {
+          Log.w(TAG, e);
         }
       }
       list.put(obj);
