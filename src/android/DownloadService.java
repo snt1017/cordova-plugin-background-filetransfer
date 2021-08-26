@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import co.inkremental.taskgo.staging.BuildConfig;
-
 
 public class DownloadService {
 
